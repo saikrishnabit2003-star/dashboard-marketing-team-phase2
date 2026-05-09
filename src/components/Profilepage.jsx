@@ -76,7 +76,7 @@ const Profilepage = () => {
             if (response.ok) {
                 showNotification("Profile appended successfully", "success");
                 setNewProfileName('');
-                fetchUserDetails(); // Refresh data
+                fetchUserDetails(); // Refresh dat
             } else {
                 const errorData = await response.json();
                 showNotification(errorData.message || "Failed to append profile", "error");
