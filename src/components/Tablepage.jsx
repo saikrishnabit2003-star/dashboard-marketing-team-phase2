@@ -148,7 +148,7 @@ export function Tablepage({ searchTerm }) {
         const rowToUpdate = updatedTableData[rowIndex];
 
         try {
-            const response = await fetch(`https://email-marketing-dashboard-v1.vercel.app/dashboard/orders/${rowToUpdate.order_db_id}`, {
+            const response = await fetch(`https://email-marketing-dashboard-phase-1.vercel.app/dashboard/orders/${rowToUpdate.order_db_id}`, {
                 method: "PATCH",
                 headers: {
                     "Content-Type": "application/json",

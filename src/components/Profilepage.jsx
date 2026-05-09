@@ -26,7 +26,7 @@ const Profilepage = () => {
         const token = localStorage.getItem('token');
         if (token) {
             setLoading(true);
-            fetch("https://email-marketing-dashboard-v1.vercel.app/users/me/details", {
+            fetch("https://email-marketing-dashboard-phase-1.vercel.app/users/me/details", {
                 method: "GET",
                 headers: {
                     "Authorization": `Bearer ${token}`
@@ -61,7 +61,7 @@ const Profilepage = () => {
         setIsAppending(true);
 
         try {
-            const response = await fetch("https://email-marketing-dashboard-v1.vercel.app/users/profiles/append", {
+            const response = await fetch("https://email-marketing-dashboard-phase-1.vercel.app/users/profiles/append", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -99,7 +99,7 @@ const Profilepage = () => {
 
         const token = localStorage.getItem('token');
         try {
-            const response = await fetch("https://email-marketing-dashboard-v1.vercel.app/users/me/password", {
+            const response = await fetch("https://email-marketing-dashboard-phase-1.vercel.app/users/me/password", {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",

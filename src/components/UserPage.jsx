@@ -86,7 +86,7 @@ export function UserPage({ searchTerm }) {
     useEffect(() => {
         const token = localStorage.getItem('token');
         if (token) {
-            fetch("https://email-marketing-dashboard-v1.vercel.app/users/me/details", {
+            fetch("https://email-marketing-dashboard-phase-1.vercel.app/users/me/details", {
                 method: "GET",
                 headers: {
                     "Authorization": `Bearer ${token}`

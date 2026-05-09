@@ -55,7 +55,7 @@ export function Accounts({ searchTerm }) {
         const token = localStorage.getItem('token');
         if (!token) return;
         setLoading(true);
-        fetch("https://email-marketing-dashboard-v1.vercel.app/clients", {
+        fetch("https://email-marketing-dashboard-phase-1.vercel.app/clients", {
             method: "GET",
             headers: {
                 "Authorization": `Bearer ${token}`
@@ -94,7 +94,7 @@ export function Accounts({ searchTerm }) {
         const token = localStorage.getItem('token');
         if (!token) return;
         setEmpLoading(true);
-        fetch("https://email-marketing-dashboard-v1.vercel.app/users", {
+        fetch("https://email-marketing-dashboard-phase-1.vercel.app/users", {
             method: "GET",
             headers: {
                 "Authorization": `Bearer ${token}`
@@ -131,7 +131,7 @@ export function Accounts({ searchTerm }) {
         const token = localStorage.getItem('token');
         if (!token) return;
         setAdminLoading(true);
-        fetch("https://email-marketing-dashboard-v1.vercel.app/admins", {
+        fetch("https://email-marketing-dashboard-phase-1.vercel.app/admins", {
             method: "GET",
             headers: {
                 "Authorization": `Bearer ${token}`

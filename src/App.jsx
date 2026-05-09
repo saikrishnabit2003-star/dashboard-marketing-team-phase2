@@ -3,6 +3,7 @@ import 'leaflet/dist/leaflet.css';
 import './App.css'
 import { UserPage } from './components/UserPage'
 import Loginpage2 from './components/Loginpage2'
+import { AmountTable } from './components/AmountTable'
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Tablepage } from './components/Tablepage';
@@ -85,6 +86,9 @@ function DashboardLayout() {
           <NavLink to="/accounts" style={{ textDecoration: "none" }} onClick={() => setIsSidebarOpen(false)}>
             <button>Accounts</button>
           </NavLink>
+          <NavLink to="/AmountTable" style={{ textDecoration: "none" }} onClick={() => setIsSidebarOpen(false)}>
+            <button>Amount table</button>
+          </NavLink>
         </div>
 
         {/* <div className='navfooter'>
@@ -147,6 +151,7 @@ function DashboardLayout() {
             <Route path="table" element={<Tablepage searchTerm={searchTerm} />} />
             <Route path="accounts" element={<Accounts searchTerm={searchTerm} />} />
             <Route path="profile" element={<Profilepage />} />
+            <Route path="amounttable" element={<AmountTable searchTerm={searchTerm} />} />
           </Routes>
         </div>
       </div>

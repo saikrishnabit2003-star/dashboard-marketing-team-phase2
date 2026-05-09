@@ -31,7 +31,7 @@ const Loginpage2 = () => {
       password: password,
     }
     setLoginLoading(true);
-    fetch("https://email-marketing-dashboard-v1.vercel.app/login", {
+    fetch("https://email-marketing-dashboard-phase-1.vercel.app/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
