@@ -1,0 +1,535 @@
+/* ═══════════════════════════════════════════════════════════════
+   Table.module.css — Overall Table Page
+   Clean professional data table: navy header, subtle stripes,
+   readable typography, smooth interactions
+   ═══════════════════════════════════════════════════════════════ */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+/* ─── Variables ─────────────────────────────────────────────── */
+:global(:root) {
+  --navy:           var(--theme-color, #0d1b3e);
+  --navy-mid:       var(--theme-color, #1a2f5e);
+  --accent:         #006efe;
+  --accent-soft:    rgba(0, 110, 254, 0.08);
+  --teal:           #00bcd4;
+  --teal-soft:      rgba(0, 188, 212, 0.08);
+  --red:            #e5484d;
+  --orange:         #c93e0b;
+  --green:          #16a34a;
+
+  --bg:             #f3f4f8;
+  --card:           #ffffff;
+  --stripe:         #f8f9fc;
+  --border:         #e5e7eb;
+  --border-light:   #f1f3f6;
+
+  --text-primary:   #111827;
+  --text-secondary: #6b7280;
+  --text-muted:     #9ca3af;
+
+  --radius-sm:      5px;
+  --radius-md:      10px;
+  --radius-lg:      14px;
+
+  --shadow-sm:      0 1px 3px rgba(0,0,0,.06);
+  --shadow-md:      0 4px 16px rgba(0,0,0,.08);
+
+  --transition:     0.15s ease;
+  --font:           'Inter', sans-serif;
+}
+
+/* ─── Page wrapper ──────────────────────────────────────────── */
+.page {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  font-family: var(--font);
+  background: var(--bg);
+}
+
+/* ─── Table card container ──────────────────────────────────── */
+.tablecontainer {
+  height: 100%;
+  width: 100%;
+  max-width: 100%;
+  background: var(--card);
+  border-radius: var(--radius-lg);
+  display: flex;
+  flex-direction: column;
+  padding: 16px 20px;
+  box-shadow: var(--shadow-md);
+  gap: 12px;
+  box-sizing: border-box;
+}
+
+/* ─── Table header bar ──────────────────────────────────────── */
+.tableheader {
+  height: 52px;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.tableheader h2 {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.tableheader p {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.tableheader p span {
+  font-weight: 600;
+  color: var(--red);
+}
+
+/* ─── Export button ─────────────────────────────────────────── */
+.exportBtn {
+  padding: 8px 20px;
+  border-radius: var(--radius-md);
+  border: none;
+  background: var(--navy);
+  color: #fff;
+  font-family: var(--font);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background var(--transition), transform var(--transition), box-shadow var(--transition);
+  box-shadow: 0 2px 8px rgba(13, 27, 62, 0.25);
+}
+
+.exportBtn:hover {
+  background: var(--navy-mid);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(13, 27, 62, 0.35);
+}
+
+/* ─── Scrollable data area ──────────────────────────────────── */
+.tablecontainerdata {
+  flex: 1;
+  width: 100%;
+  overflow-x: auto;
+  overflow-y: auto;
+  scrollbar-width: hide; /* Firefox: hide scrollbar */
+  border: 1px solid var(--border);
+  /* border-radius: var(--radius-md); */
+}
+
+.tablecontainerdata::-webkit-scrollbar {
+  width: 5px; /* Hide vertical scrollbar */
+  height: 4px; /* Keep horizontal scrollbar */
+}
+
+.tablecontainerdata::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.tablecontainerdata::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+  border-radius: 99px;
+}
+
+.tablecontainerdata::-webkit-scrollbar-thumb:hover {
+  background: #9ca3af;
+}
+
+/* ─── Table base ────────────────────────────────────────────── */
+.tabledata {
+  min-width: 1500px;
+  width: max-content;
+  border-collapse: collapse;
+  font-family: var(--font);
+  background: var(--card);
+  scrollbar-color: black;
+}
+
+/* ─── Thead ─────────────────────────────────────────────────── */
+.tabledata thead {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  height: 44px;
+}
+
+.tabledata thead tr th {
+  background: var(--navy);
+  color: rgba(255, 255, 255, 0.85);
+  font-weight: 600;
+  font-size: 1em;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  padding: 0 12px;
+  height: 44px;
+  white-space: nowrap;
+  border-right: 1px solid rgba(255,255,255,0.07);
+}
+
+.tabledata thead tr th:last-child {
+  border-right: none;
+}
+
+/* ─── Tbody rows ────────────────────────────────────────────── */
+.tabledata tbody tr {
+  height: 46px;
+  border-bottom: 1px solid var(--border-light);
+  transition: background var(--transition);
+}
+
+.tabledata tbody tr:last-child {
+  border-bottom: none;
+}
+
+/* Subtle alternating stripe — replaces the dark grey */
+.tabledata tbody tr:nth-child(even) {
+  background-color: var(--stripe);
+}
+
+.tabledata tbody tr:nth-child(odd) {
+  background-color: var(--card);
+}
+
+/* Row hover */
+.tabledata tbody tr td:hover {
+  background-color:rgb(201, 197, 197) !important;
+}
+
+/* ─── All cells base ────────────────────────────────────────── */
+.tabledata th,
+.tabledata td {
+  text-align: center;
+  height: 46px;
+  padding: 0 12px;
+  font-size: 0.82rem;
+  white-space: nowrap;
+  
+}
+
+.tabledata td {
+  text-align: start;
+  color: var(--text-primary);
+  /* override even-row background via inherit */
+  background-color: inherit;
+}
+
+/* ─── Sticky second column ──────────────────────────────────── */
+.tabledata td:nth-child(2) {
+  position: sticky;
+  left: 0;
+  z-index: 1;
+  color: var(--red);
+  font-weight: 600;
+  background-color: inherit;
+}
+
+.tabledata th:nth-child(2) {
+  position: sticky;
+  left: 0;
+  z-index: 3;
+  background: var(--navy); /* keep same as thead */
+}
+
+/* ─── Specific column color accents ─────────────────────────── */
+/* Column 5 — cadetblue (country / profile) */
+.tabledata td:nth-child(5) {
+  color: #4a90a4;
+}
+
+/* Column 8 — orange-red */
+.tabledata td:nth-child(8) {
+  color: var(--orange);
+  font-weight: 500;
+}
+.tabledata td:nth-child(11){
+  width: 200px;
+}
+/* Columns 14–17, 24, 26, 28, 30 — blue (amounts) */
+
+.tabledata td:nth-child(14),
+.tabledata td:nth-child(15),
+.tabledata td:nth-child(16),
+.tabledata td:nth-child(17),
+.tabledata td:nth-child(24),
+.tabledata td:nth-child(27),
+.tabledata td:nth-child(30),
+.tabledata td:nth-child(33) {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+/* WhatsApp column — teal */
+.tabledata td:nth-child(6),
+.tabledata td:nth-child(18),
+.tabledata td:nth-child(19), 
+.tabledata td:nth-child(20), 
+.tabledata td:nth-child(21), 
+.tabledata td:nth-child(22), 
+.tabledata td:nth-child(23),
+.tabledata td:nth-child(25),
+.tabledata td:nth-child(28),
+.tabledata td:nth-child(31) {
+  color: var(--teal);
+}
+
+/* ─── Column widths ─────────────────────────────────────────── */
+.tabledata th:nth-child(1),
+.tabledata td:nth-child(1) {
+  width: 50px;
+  text-align: center;
+  /* color: var(--text-muted); */
+  font-weight: 500;
+}
+
+.tabledata th:nth-child(2),
+.tabledata td:nth-child(2) {
+  width: 110px;
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+
+.tabledata th:nth-child(3),
+.tabledata td:nth-child(3) {
+  width: 100px;
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+
+.tabledata th:nth-child(4),
+.tabledata td:nth-child(4) {
+  width: 150px;
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+
+.tabledata th:nth-child(5),
+.tabledata td:nth-child(5) {
+  width: 110px;
+  text-align: center;
+}
+
+.tabledata th:nth-child(6),
+.tabledata td:nth-child(6) {
+  width: 140px;
+  text-align: center;
+}
+
+.tabledata th:nth-child(7),
+.tabledata td:nth-child(7) {
+  width: 120px;
+  text-align: center;
+}
+
+.tabledata th:nth-child(8),
+.tabledata td:nth-child(8) {
+  width: 150px;
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+
+.tabledata th:nth-child(9),
+.tabledata td:nth-child(9) {
+  width: 150px;
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+
+.tabledata td:nth-child(10),
+.tabledata td:nth-child(11),
+.tabledata td:nth-child(34),
+.tabledata td:nth-child(35),
+.tabledata td:nth-child(36) {
+  white-space: pre-wrap;
+  width: 280px;
+  overflow-wrap: break-word;
+  line-height: 1.4;
+  padding: 6px 12px;
+  vertical-align: top;
+}
+
+.scrollableCellContent {
+  max-height: 80px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  padding-right: 4px;
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+  word-break: break-word;
+  line-height: 1.5;
+  text-align: left;
+}
+
+.scrollableCellContent::-webkit-scrollbar {
+  width: 2px;
+}
+.scrollableCellContent::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 4px;
+}
+
+.tabledata th:nth-child(12),
+.tabledata td:nth-child(12),
+.tabledata th:nth-child(13),
+.tabledata td:nth-child(13),
+.tabledata th:nth-child(14),
+.tabledata td:nth-child(14) {
+  width: 150px;
+  text-align: center;
+}
+
+/* ─── Table footer / pagination ─────────────────────────────── */
+.tablefooter {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  padding: 4px 0;
+}
+
+.tablefooter button {
+  padding: 6px 18px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--text-secondary);
+  font-family: var(--font);
+  font-size: 0.82rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--transition);
+}
+
+.tablefooter button:hover {
+  background: var(--navy);
+  color: #fff;
+  border-color: var(--navy);
+}
+
+.tablefooter button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* Page indicator text */
+.tablefooter span,
+.tablefooter p,
+.tablefooter b,
+.tablefooter strong {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  font-weight: 600;
+}
+
+/* ─── Inline edit input ─────────────────────────────────────── */
+.editInput {
+  width: 100%;
+  height: 32px;
+  padding: 4px 8px;
+  font-family: var(--font);
+  font-size: 0.8rem;
+  border: 1.5px solid var(--accent);
+  border-radius: var(--radius-sm);
+  box-sizing: border-box;
+  text-align: center;
+  background: #fff;
+  color: var(--text-primary);
+  outline: none;
+  transition: box-shadow var(--transition);
+}
+
+.editInput:focus {
+  box-shadow: 0 0 0 3px rgba(0, 110, 254, 0.15);
+  border-color: var(--navy);
+}
+
+select.editInput {
+  cursor: pointer;
+  appearance: auto;
+}
+
+.editInput option {
+  padding: 8px;
+  font-size: 0.82rem;
+}
+
+/* ─── View link ─────────────────────────────────────────────── */
+.viewLink {
+  text-decoration: none;
+  color: var(--accent);
+  font-weight: 600;
+  font-size: 0.7rem;
+  padding: 3px 9px;
+  border: 1px solid var(--accent);
+  border-radius: var(--radius-sm);
+  background: transparent;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  transition: all var(--transition);
+  display: inline-block;
+}
+
+.viewLink:hover {
+  background: var(--accent);
+  color: #fff;
+}
+
+/* ─── Notifications ─────────────────────────────────────────── */
+.notification {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 13px 20px;
+  border-radius: var(--radius-md);
+  z-index: 9999;
+  color: #fff;
+  font-family: var(--font);
+  font-size: 0.88rem;
+  font-weight: 500;
+  min-width: 280px;
+  box-shadow: var(--shadow-md);
+  animation: slideIn 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.success {
+  background: #16a34a;
+}
+
+.error {
+  background: #dc2626;
+}
+
+.notificationIcon {
+  width: 22px;
+  height: 22px;
+  background: rgba(255, 255, 255, 0.22);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 800;
+  flex-shrink: 0;
+}
+
+@keyframes slideIn {
+  from { transform: translateX(110%); opacity: 0; }
+  to   { transform: translateX(0);    opacity: 1; }
+}
