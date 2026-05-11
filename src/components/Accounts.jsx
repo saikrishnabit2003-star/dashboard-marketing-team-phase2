@@ -3,6 +3,7 @@ import styles from "./Accounts.module.css";
 import { ClientForm } from "./ClientForm";
 import { EmployeeForm } from "./EmployeeForm";
 import { AdminForm } from "./AdminForm";
+import { BASE_URL } from '../config';
 
 export function Accounts({ searchTerm }) {
     const [activeTab, setActiveTab] = useState("client");

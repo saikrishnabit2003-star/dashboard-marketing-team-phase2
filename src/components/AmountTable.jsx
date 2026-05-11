@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Style from './AmountTable.module.css';
+import { BASE_URL } from '../config';
 
 const formatDate = (dateString) => {
     if (!dateString || dateString === 'N/A') return 'N/A';

@@ -4,6 +4,8 @@ import closeeye from '../assets/closeeye.png'
 import openeye from '../assets/openeye.png'
 import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 import { useNavigate } from 'react-router-dom';
+import { BASE_URL } from '../config';
+
 
 const Loginpage2 = () => {
   const [showPassword, setShowPassword] = useState(false);

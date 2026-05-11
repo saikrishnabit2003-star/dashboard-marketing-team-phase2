@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import styles from './Profilepage.module.css';
 import closeeye from '../assets/closeeye.png';
 import openeye from '../assets/openeye.png';
+import { BASE_URL } from '../config';
+
 
 const Profilepage = () => {
     const [userData, setUserData] = useState(null);
