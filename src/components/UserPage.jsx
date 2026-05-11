@@ -5,6 +5,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import { useState, useEffect } from 'react';
 import amounticon from "../assets/amounticon.png";
 import amounticon2 from "../assets/amount2.png";
+import { BASE_URL } from '../config';
 
 export function UserPage({ searchTerm }) {
 
@@ -56,7 +57,39 @@ export function UserPage({ searchTerm }) {
     // rawData is now driven from API (country_split); kept as state
     const [rawData, setRawData] = useState([]);
 
-    const COLORS = ['#f14337', '#7300b5', '#a5224e', '#3ac982', '#0964da', '#076c79', '#6591e4', '#a89a15', '#074279', '#66468f', '#a8157c', '#074279', '#0c9287'];
+    // const COLORS = ['#f14337', '#7300b5', '#a5224e', '#3ac982', '#0964da', '#076c79', '#6591e4', '#a89a15', '#074279', '#66468f', '#a8157c', '#074279', '#0c9287'];
+   const COLORS = [
+  '#FF6B6B', // red
+  '#4ECDC4', // teal
+  '#45B7D1', // blue
+  '#FFA726', // orange
+  '#AB47BC', // purple
+  '#66BB6A', // green
+  '#EF5350', // soft red
+  '#29B6F6', // light blue
+  '#FFCA28', // yellow
+  '#7E57C2', // violet
+  '#26A69A', // aqua
+  '#EC407A', // pink
+  '#5C6BC0', // indigo
+  '#8D6E63', // brown
+  '#26C6DA', // cyan
+  '#9CCC65', // lime green
+  '#FF7043', // deep orange
+  '#D4E157', // lime
+  '#42A5F5', // bright blue
+  '#EC7063', // salmon
+  '#AF7AC5', // lavender
+  '#48C9B0', // mint
+  '#F5B041', // amber
+  '#5DADE2', // sky blue
+  '#58D68D', // emerald
+  '#F1948A', // rose
+  '#BB8FCE', // soft purple
+  '#73C6B6', // sea green
+  '#F7DC6F', // gold
+  '#85929E'  // gray
+];
     const [startDate, setStartDate] = useState(null);
     const [endDate, setEndDate] = useState(null);
     const [pieData, setPieData] = useState([]);
@@ -86,7 +119,7 @@ export function UserPage({ searchTerm }) {
     useEffect(() => {
         const token = localStorage.getItem('token');
         if (token) {
-            fetch("https://email-marketing-dashboard-phase-1.vercel.app/users/me/details", {
+            fetch(`${BASE_URL}/users/me/details`, {
                 method: "GET",
                 headers: {
                     "Authorization": `Bearer ${token}`

@@ -11,7 +11,9 @@ import { Accounts } from './components/Accounts';
 import { useEffect } from 'react';
 import ProtectedRoute from './components/ProtectedRoute';
 import Profilepage from './components/Profilepage';
-import MagentaLogo from './assets/Magenta data visualisation on monitor.png';
+import { History } from './components/History';
+import { BASE_URL } from './config';
+// import MagentaLogo from './assets/Magenta data visualisation on monitor.png';
 import Faceicon from './assets/faceicon.png';
 import DownArrowIcon from './assets/downarrow.png';
 import { DotLottieReact } from '@lottiefiles/dotlottie-react';
@@ -39,10 +41,10 @@ function DashboardLayout() {
     const token = localStorage.getItem('token');
     console.log(token)
     if (token) {
-      fetch("https://email-marketing-dashboard-v1.vercel.app/users/me/details", {
+      fetch(`${BASE_URL}/users/me/details`, {
         method: "GET",
         headers: {
-          "Authorization": `Bearer ${token}`
+          "Authorization": `Bearer ${token}`  
         }
       })
         .then(response => response.json())
@@ -88,6 +90,9 @@ function DashboardLayout() {
           </NavLink>
           <NavLink to="/AmountTable" style={{ textDecoration: "none" }} onClick={() => setIsSidebarOpen(false)}>
             <button>Amount table</button>
+          </NavLink>
+          <NavLink to="/history" style={{ textDecoration: "none" }} onClick={() => setIsSidebarOpen(false)}>
+            <button>History</button>
           </NavLink>
         </div>
 
@@ -152,6 +157,7 @@ function DashboardLayout() {
             <Route path="accounts" element={<Accounts searchTerm={searchTerm} />} />
             <Route path="profile" element={<Profilepage />} />
             <Route path="amounttable" element={<AmountTable searchTerm={searchTerm} />} />
+            <Route path="history" element={<History searchTerm={searchTerm} />} />
           </Routes>
         </div>
       </div>

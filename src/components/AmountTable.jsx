@@ -6,7 +6,7 @@ const formatDate = (dateString) => {
     if (!dateString || dateString === 'N/A') return 'N/A';
     try {
         const date = new Date(dateString);
-        if (isNaN(date.getTime())) return dateString; 
+        if (isNaN(date.getTime())) return dateString;
         const day = String(date.getDate()).padStart(2, '0');
         const month = String(date.getMonth() + 1).padStart(2, '0');
         const year = date.getFullYear();
@@ -25,7 +25,7 @@ export function AmountTable({ searchTerm }) {
                 const token = localStorage.getItem('token');
                 if (!token) return;
 
-                const response = await axios.get("https://email-marketing-dashboard-phase-1.vercel.app/payments/history", {
+                const response = await axios.get(`${BASE_URL}/payments/history`, {
                     headers: {
                         "Authorization": `Bearer ${token}`
                     }

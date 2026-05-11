@@ -55,7 +55,7 @@ export function Accounts({ searchTerm }) {
         const token = localStorage.getItem('token');
         if (!token) return;
         setLoading(true);
-        fetch("https://email-marketing-dashboard-phase-1.vercel.app/clients", {
+        fetch(`${BASE_URL}/clients`, {
             method: "GET",
             headers: {
                 "Authorization": `Bearer ${token}`
@@ -94,7 +94,7 @@ export function Accounts({ searchTerm }) {
         const token = localStorage.getItem('token');
         if (!token) return;
         setEmpLoading(true);
-        fetch("https://email-marketing-dashboard-phase-1.vercel.app/users", {
+        fetch(`${BASE_URL}/users`, {
             method: "GET",
             headers: {
                 "Authorization": `Bearer ${token}`
@@ -131,7 +131,7 @@ export function Accounts({ searchTerm }) {
         const token = localStorage.getItem('token');
         if (!token) return;
         setAdminLoading(true);
-        fetch("https://email-marketing-dashboard-phase-1.vercel.app/admins", {
+        fetch(`${BASE_URL}/admins`, {
             method: "GET",
             headers: {
                 "Authorization": `Bearer ${token}`
@@ -216,7 +216,7 @@ export function Accounts({ searchTerm }) {
         let payload = {};
 
         if (popupType === 'client') {
-            endpoint = 'https://email-marketing-dashboard-v1.vercel.app/unified/create';
+            endpoint = `${BASE_URL}/unified/create`;
             payload = {
                 client_id: formValues.client_id.toUpperCase(),
                 client_name: formValues.client_name.toUpperCase(),
@@ -243,7 +243,7 @@ export function Accounts({ searchTerm }) {
                 order_status: "Active"
             };
         } else if (popupType === 'employee') {
-            endpoint = 'https://email-marketing-dashboard-v1.vercel.app/users';
+            endpoint = `${BASE_URL}/users`;
             payload = {
                 full_name: formValues.name.toUpperCase(),
                 email: formValues.email,
@@ -254,7 +254,7 @@ export function Accounts({ searchTerm }) {
                 role: "employee"
             };
         } else if (popupType === 'manager' || popupType === 'admin') {
-            endpoint = 'https://email-marketing-dashboard-v1.vercel.app/managers';
+            endpoint = `${BASE_URL}/managers`;
             payload = {
                 full_name: formValues.name.toUpperCase(),
                 email: formValues.email,

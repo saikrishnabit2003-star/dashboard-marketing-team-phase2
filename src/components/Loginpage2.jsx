@@ -31,7 +31,7 @@ const Loginpage2 = () => {
       password: password,
     }
     setLoginLoading(true);
-    fetch("https://email-marketing-dashboard-phase-1.vercel.app/login", {
+    fetch(`${BASE_URL}/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -71,7 +71,7 @@ const Loginpage2 = () => {
     }
     setOtpLoading(true);
     // Add real auth logic here if needed
-    fetch("https://email-marketing-dashboard-v1.vercel.app/verify-otp", {
+    fetch(`${BASE_URL}/verify-otp`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"

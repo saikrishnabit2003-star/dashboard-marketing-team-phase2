@@ -3,6 +3,7 @@ import Style from './Tablepage.module.css'
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
 import * as XLSX from 'xlsx';
+import { BASE_URL } from '../config';
 
 const formatDate = (dateString) => {
     if (!dateString || dateString === 'N/A') return 'N/A';
@@ -22,6 +23,7 @@ export function Tablepage({ searchTerm }) {
     const [currentPage, setCurrentPage] = useState(1);
     const [editingCell, setEditingCell] = useState(null); // { rowIndex, fieldName }
     const [editValue, setEditValue] = useState('');
+    const [phaseModal, setPhaseModal] = useState(null); // { phase, rowIndex, data: { payment, date, details } }
     const [notification, setNotification] = useState({ message: '', type: '', visible: false });
     const itemsPerPage = 15;
 
@@ -35,7 +37,7 @@ export function Tablepage({ searchTerm }) {
     const fetchTableData = () => {
         const token = localStorage.getItem('token');
         if (token) {
-            fetch("https://email-marketing-dashboard-v1.vercel.app/dashboard/orders", {
+            fetch(`${BASE_URL}/dashboard/orders`, {
                 method: "GET",
                 headers: {
                     "Authorization": `Bearer ${token}`
@@ -63,8 +65,101 @@ export function Tablepage({ searchTerm }) {
     }, []);
 
     const handleDoubleClick = (rowIndex, fieldName, currentValue) => {
+        const phaseMatch = fieldName.match(/^phase_(\d)_payment(?:_date|_details)?$/);
+        if (phaseMatch) {
+            const phase = parseInt(phaseMatch[1]);
+            setPhaseModal({
+                phase,
+                rowIndex,
+                data: {
+                    payment: tableData[rowIndex][`phase_${phase}_payment`] || '',
+                    date: tableData[rowIndex][`phase_${phase}_payment_date`] || '',
+                    details: tableData[rowIndex][`phase_${phase}_payment_details`] || ''
+                }
+            });
+            return;
+        }
+
         setEditingCell({ rowIndex, fieldName });
         setEditValue(currentValue || '');
+    };
+
+    const handlePhaseModalChange = (field, value) => {
+        setPhaseModal(prev => ({
+            ...prev,
+            data: {
+                ...prev.data,
+                [field]: value
+            }
+        }));
+    };
+
+    const submitPhaseModal = async (e) => {
+        e.preventDefault();
+        if (!phaseModal) return;
+        const { rowIndex, phase, data } = phaseModal;
+        
+        const paymentField = `phase_${phase}_payment`;
+        const dateField = `phase_${phase}_payment_date`;
+        const detailsField = `phase_${phase}_payment_details`;
+
+        let finalPayment = data.payment;
+        if (finalPayment === '' || finalPayment === null) {
+            finalPayment = 0;
+        } else {
+            finalPayment = parseFloat(finalPayment);
+        }
+
+        const payload = {
+            [paymentField]: finalPayment,
+            [dateField]: data.date || null,
+            [detailsField]: data.details || ''
+        };
+
+        const updatedTableData = [...tableData];
+        updatedTableData[rowIndex][paymentField] = finalPayment;
+        updatedTableData[rowIndex][dateField] = data.date;
+        updatedTableData[rowIndex][detailsField] = data.details;
+
+        // Recalculate paid_amount
+        const row = updatedTableData[rowIndex];
+        const phase1 = parseFloat(row.phase_1_payment) || 0;
+        const phase2 = parseFloat(row.phase_2_payment) || 0;
+        const phase3 = parseFloat(row.phase_3_payment) || 0;
+        const newPaid = phase1 + phase2 + phase3;
+
+        updatedTableData[rowIndex].paid_amount = newPaid;
+        payload.paid_amount = newPaid;
+
+        setTableData(updatedTableData);
+        setPhaseModal(null);
+
+        const token = localStorage.getItem('token');
+        const rowToUpdate = updatedTableData[rowIndex];
+
+        try {
+            const response = await fetch(`${BASE_URL}/dashboard/orders/${rowToUpdate.order_db_id}`, {
+                method: "PATCH",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                },
+                body: JSON.stringify(payload)
+            });
+            console.log("payload sent", payload);
+            const result = await response.json();
+            console.log("payload response", result);
+            if (response.ok) {
+                showNotification(`Phase ${phase} payment updated successfully`, "success");
+            } else {
+                showNotification("Failed to update phase payment", "error");
+                fetchTableData();
+            }
+        } catch (error) {
+            console.error('Error updating backend:', error);
+            showNotification("Error connecting to server", "error");
+            fetchTableData();
+        }
     };
 
     const handleBlur = () => {
@@ -148,7 +243,7 @@ export function Tablepage({ searchTerm }) {
         const rowToUpdate = updatedTableData[rowIndex];
 
         try {
-            const response = await fetch(`https://email-marketing-dashboard-phase-1.vercel.app/dashboard/orders/${rowToUpdate.order_db_id}`, {
+            const response = await fetch(`${BASE_URL}/dashboard/orders/${rowToUpdate.order_db_id}`, {
                 method: "PATCH",
                 headers: {
                     "Content-Type": "application/json",
@@ -592,6 +687,53 @@ export function Tablepage({ searchTerm }) {
                     <button onClick={() => handlePageChange(currentPage + 1)} disabled={currentPage === totalPages}>Next</button>
                 </div>
             </div>
+
+            {phaseModal && (
+                <div className={Style.modalOverlay}>
+                    <div className={Style.modalCard}>
+                        <div className={Style.modalHeader}>
+                            <h3>Update Phase {phaseModal.phase} Payment</h3>
+                            <button className={Style.closeBtn} onClick={() => setPhaseModal(null)}>×</button>
+                        </div>
+                        <form className={Style.modalForm} onSubmit={submitPhaseModal}>
+                            <div className={Style.modalInputGroup}>
+                                <label>Payment Amount</label>
+                                <input 
+                                    type="number" 
+                                    step="any"
+                                    min="0"
+                                    value={phaseModal.data.payment}
+                                    onChange={(e) => handlePhaseModalChange('payment', e.target.value)}
+                                    placeholder={`Enter Phase ${phaseModal.phase} Amount`}
+                                />
+                            </div>
+                            <div className={Style.modalInputGroup}>
+                                <label>Payment Date</label>
+                                <DatePicker
+                                    selected={phaseModal.data.date && !isNaN(new Date(phaseModal.data.date).getTime()) ? new Date(phaseModal.data.date) : null}
+                                    onChange={(date) => {
+                                        handlePhaseModalChange('date', date ? date.toISOString() : '');
+                                    }}
+                                    className={Style.editInput}
+                                    wrapperClassName={Style.datePickerWrapper}
+                                />
+                            </div>
+                            <div className={Style.modalInputGroup}>
+                                <label>Payment Reason</label>
+                                <textarea 
+                                    value={phaseModal.data.details}
+                                    onChange={(e) => handlePhaseModalChange('details', e.target.value)}
+                                    placeholder="Enter payment reason / details..."
+                                />
+                            </div>
+                            <div className={Style.modalFooter}>
+                                <button type="button" className={Style.cancelBtn} onClick={() => setPhaseModal(null)}>Cancel</button>
+                                <button type="submit" className={Style.submitBtn}>Update</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }
