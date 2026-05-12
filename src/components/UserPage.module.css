@@ -119,11 +119,46 @@
     align-items: center;
 }
 #analaysisimg1 img,
+
 #analaysisimg12 img{
     height: 100%;
     width: auto;
 }
+#analaysisimg5{
+    height: 70px;
+    width: auto;
+    border: 5px solid transparent;
+    background-image: linear-gradient(#ffffff, #e2e2e2), 
+                      linear-gradient(to right, #c3b1d4 20%, #df74df,#ec00ec);
+    border-image-slice: 1;
+    background-origin: border-box;
+    background-clip: padding-box, border-box;
+    border-radius: 50%;
+    
+    /* temp */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 
+
+#analaysisimg3 img,
+#analaysisimg42 img,
+
+#analaysisimg22 img,
+#analaysisimg25 img{
+    height: 100%;
+    width: auto;
+    padding: 8px;
+}
+#analaysisimg4 img,
+#analaysisimg5 img,
+#analaysisimg2 img,
+#analaysisimg32 img{
+    height: 100%;
+    width: auto;
+    padding: 12px;
+}
 /* temp */
 #analaysisimg1 h1,
 #analaysisimg2 h1,
@@ -152,6 +187,9 @@
     width: 60%;
     text-align: center;
 }
+#analaysistext :nth-child(1) span{
+    color:black;
+}
 #analaysistext :nth-child(1){
     color: red;
     text-shadow: none;
@@ -160,7 +198,7 @@
     font-weight: bold;
 }
 #analaysistext :nth-child(2){
-    font-size: large;
+    font-size: medium;
     text-transform: capitalize;
     color: black;
     text-shadow: none;
@@ -479,6 +517,7 @@
 }
 #analaysisimg12,
 #analaysisimg22,
+#analaysisimg25,
 #analaysisimg32,
 #analaysisimg42{
     height: 70px;
@@ -507,8 +546,10 @@
 #analaysisimg42{background-image: linear-gradient(#ffffff, #e2e2e2), 
                       linear-gradient(to right, #e0e0e0 20%, #ebc552,hsl(45, 80%, 51%));}
 #analaysisimg32{background-image: linear-gradient(#ffffff, #e2e2e2), 
-                      linear-gradient(to right, #e0e0e0 20%, #32b995,rgb(66, 176, 103));}
+                      linear-gradient(to right, #e0e0e0 20%, #32b995,#42b067);}
 #analaysisimg22{background-image: linear-gradient(#ffffff, #e2e2e2), 
+                      linear-gradient(to right, #e0e0e0 20%, #81bdcf,#57bcd8);}
+#analaysisimg25{background-image: linear-gradient(#ffffff, #e2e2e2), 
                       linear-gradient(to right, #e0e0e0 20%, #5aebdc,#0bf7df);}
 #analaysisimg12{background-image: linear-gradient(#ffffff, #e2e2e2), 
                       linear-gradient(to right, #e0e0e0 20%, #eb52b8,#f000a0);}

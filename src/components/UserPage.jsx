@@ -6,6 +6,14 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import amounticon from "../assets/amounticon.png";
 import amounticon2 from "../assets/amount2.png";
+import customericon from "../assets/customer_icon.png";
+import customericon1 from "../assets/client_icon2.png";
+import ordericon1 from "../assets/order_icon2.png";
+import ordericon2 from "../assets/order_icon.png";
+import pendingicon1 from "../assets/pendind_icon1.png";
+import pendingicon2 from "../assets/pending_icon2.png";
+import rejecticon1 from "../assets/reject_icon1.png";
+import rejecticon2 from "../assets/reject_icon2.png"
 import { BASE_URL } from '../config';
 
 export function UserPage({ searchTerm }) {
@@ -15,6 +23,7 @@ export function UserPage({ searchTerm }) {
     const [totalUsdAmount, setTotalUsdAmount] = useState(0)
     const [totalclient, settotalclient] = useState(0)
     const [totalOrders, setTotalOrders] = useState(0)
+    const [totalOrdold, setTotalOrdold] = useState(0)
     const [pendingcount, setpendingcount] = useState(0)
     const [rejcount, settrejcount] = useState(0)
     const [table, settable] = useState([])
@@ -30,6 +39,7 @@ export function UserPage({ searchTerm }) {
     const [monthAmount, setMonthAmount] = useState(0)
     const [monthClients, setMonthClients] = useState(0)
     const [monthOrders, setMonthOrders] = useState(0)
+    const [monthOrdersOld, setMonthOrdersOld] = useState(0)
     const [monthPending, setMonthPending] = useState(0)
     const [monthRej, setMonthRej] = useState(0)
 
@@ -60,38 +70,38 @@ export function UserPage({ searchTerm }) {
     const [rawData, setRawData] = useState([]);
 
     // const COLORS = ['#f14337', '#7300b5', '#a5224e', '#3ac982', '#0964da', '#076c79', '#6591e4', '#a89a15', '#074279', '#66468f', '#a8157c', '#074279', '#0c9287'];
-   const COLORS = [
-  '#FF6B6B', // red
-  '#4ECDC4', // teal
-  '#45B7D1', // blue
-  '#FFA726', // orange
-  '#AB47BC', // purple
-  '#66BB6A', // green
-  '#EF5350', // soft red
-  '#29B6F6', // light blue
-  '#FFCA28', // yellow
-  '#7E57C2', // violet
-  '#26A69A', // aqua
-  '#EC407A', // pink
-  '#5C6BC0', // indigo
-  '#8D6E63', // brown
-  '#26C6DA', // cyan
-  '#9CCC65', // lime green
-  '#FF7043', // deep orange
-  '#D4E157', // lime
-  '#42A5F5', // bright blue
-  '#EC7063', // salmon
-  '#AF7AC5', // lavender
-  '#48C9B0', // mint
-  '#F5B041', // amber
-  '#5DADE2', // sky blue
-  '#58D68D', // emerald
-  '#F1948A', // rose
-  '#BB8FCE', // soft purple
-  '#73C6B6', // sea green
-  '#F7DC6F', // gold
-  '#85929E'  // gray
-];
+    const COLORS = [
+        '#FF6B6B', // red
+        '#4ECDC4', // teal
+        '#45B7D1', // blue
+        '#FFA726', // orange
+        '#AB47BC', // purple
+        '#66BB6A', // green
+        '#EF5350', // soft red
+        '#29B6F6', // light blue
+        '#FFCA28', // yellow
+        '#7E57C2', // violet
+        '#26A69A', // aqua
+        '#EC407A', // pink
+        '#5C6BC0', // indigo
+        '#8D6E63', // brown
+        '#26C6DA', // cyan
+        '#9CCC65', // lime green
+        '#FF7043', // deep orange
+        '#D4E157', // lime
+        '#42A5F5', // bright blue
+        '#EC7063', // salmon
+        '#AF7AC5', // lavender
+        '#48C9B0', // mint
+        '#F5B041', // amber
+        '#5DADE2', // sky blue
+        '#58D68D', // emerald
+        '#F1948A', // rose
+        '#BB8FCE', // soft purple
+        '#73C6B6', // sea green
+        '#F7DC6F', // gold
+        '#85929E'  // gray
+    ];
     const [startDate, setStartDate] = useState(null);
     const [endDate, setEndDate] = useState(null);
     const [pieData, setPieData] = useState([]);
@@ -155,10 +165,11 @@ export function UserPage({ searchTerm }) {
                     // Let's keep it here for simplicity since it's "static" overall data.
                     const overallAmt = clientdetail.reduce((s, c) => s + (c.paid_amount || 0), 0);
                     const totalClt = new Set(clientdetail.map(c => c.client_id)).size;
-                    const totalOrd = clientdetail.length;
+                    const totalOrd = clientdetail.filter(c => c.is_new_order.toLowerCase() === "yes").length;
+                    const totalOrdold = clientdetail.filter(c => c.is_new_order.toLowerCase() === "no").length;
                     const pendingClt = clientdetail.filter(c => {
                         const status = (c.payment_status || "").toLowerCase();
-                        return status === "pending" || status === "not yet" || status === "partial paid";
+                        return status === "pending" || status === "not yet" || status === "partial paid" && (c.paid_amount < c.total_amount) && c.order_status.toLowerCase() !== "inactive";
                     }).length;
                     const partialClt = clientdetail.filter(c => {
                         const status = (c.order_status || "").toLowerCase();
@@ -168,6 +179,7 @@ export function UserPage({ searchTerm }) {
                     settotalamount(overallAmt);
                     settotalclient(totalClt);
                     setTotalOrders(totalOrd);
+                    setTotalOrdold(totalOrdold);
                     setpendingcount(pendingClt);
                     settrejcount(partialClt);
 
@@ -232,10 +244,11 @@ export function UserPage({ searchTerm }) {
         // Calculate stats for the filtered list
         const mAmount = filteredList.reduce((s, c) => s + (c.paid_amount || 0), 0);
         const mTotal = new Set(filteredList.map(c => c.client_id)).size;
-        const mTotalOrders = filteredList.length;
+        const mTotalOrders = filteredList.filter(c => c.is_new_order.toLowerCase() === "yes").length;
+        const mTotalOrdersOld = filteredList.filter(c => c.is_new_order.toLowerCase() === "no").length;
         const mPendingCount = filteredList.filter(c => {
             const status = (c.payment_status || "").toLowerCase();
-            return status === "pending" || status === "partial paid" || status === "not yet";
+            return status === "pending" || status === "partial paid" || status === "not yet" && (c.paid_amount < c.total_amount) && c.order_status.toLowerCase() !== "inactive";
         }).length;
         const mRejCount = filteredList.filter(c => {
             const status = (c.order_status || "").toLowerCase();
@@ -245,6 +258,7 @@ export function UserPage({ searchTerm }) {
         setMonthAmount(mAmount);
         setMonthClients(mTotal);
         setMonthOrders(mTotalOrders);
+        setMonthOrdersOld(mTotalOrdersOld);
         setMonthPending(mPendingCount);
         setMonthRej(mRejCount);
 
@@ -275,46 +289,48 @@ export function UserPage({ searchTerm }) {
                                 <div id={Style.analaysistext}>
                                     {/* <p title=" Converted from country_split values to USD\>${totalUsdAmount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p> */}
                                     <p>$ {Math.round(totalamount * 100) / 100}</p>
-                                    <p>overall amount</p>
+                                    <p>overall paid amount</p>
                                 </div>
                             </div>
 
                             <div id={Style.amountcontainer}>
                                 <div id={Style.analaysisimg2}>
-                                    <h1>{clientPct}%</h1>
+                                    {/* <h1>{clientPct}%</h1> */}
+                                    <img src={customericon} alt="" />
                                 </div>
                                 <div id={Style.analaysistext}>
                                     <p>{totalclient}</p>
-                                    <p>Total Clients</p>
+                                    <p>overall Clients</p>
                                 </div>
                             </div>
                             <div id={Style.amountcontainer}>
-                                <div id={Style.analaysisimg2}>
-                                    <h1>{clientPct}%</h1>
+                                <div id={Style.analaysisimg5}>
+                                    {/* <h1>{clientPct}%</h1> */}
+                                    <img src={ordericon1} alt="" />
                                 </div>
                                 <div id={Style.analaysistext}>
-                                    <p>{totalOrders}</p>
-                                    <p>Total Orders</p>
+                                    <p>{totalOrders} <span id={Style.analaysisspan}>|</span> {totalOrdold}</p>
+                                    <p>overall Orders</p>
                                 </div>
                             </div>
 
-                            <div id={Style.amountcontainer}>
+                            <div id={Style.amountcontainer} onDoubleClick={() => navigate('/amounttable')} style={{ cursor: 'pointer' }}>
                                 <div id={Style.analaysisimg3}>
-                                    <h1>{pendingPct}%</h1>
+                                    <img src={pendingicon1} alt="" />
                                 </div>
                                 <div id={Style.analaysistext}>
                                     <p>{pendingcount}</p>
-                                    <p>Pending count</p>
+                                    <p>Payment Pending count</p>
                                 </div>
                             </div>
 
                             <div id={Style.amountcontainer}>
                                 <div id={Style.analaysisimg4}>
-                                    <h1>{rejPct}%</h1>
+                                    <img src={rejecticon1} alt="" />
                                 </div>
                                 <div id={Style.analaysistext}>
                                     <p>{rejcount}</p>
-                                    <p>Reject count</p>
+                                    <p>Clients Rejected count</p>
                                 </div>
                             </div>
 
@@ -332,13 +348,14 @@ export function UserPage({ searchTerm }) {
                             </div>
                             <div id={Style.analaysistext}>
                                 <p>$ {Math.round(monthAmount * 100) / 100}</p>
-                                <p>Total amount</p>
+                                <p>total paid amount</p>
                             </div>
                         </div>
 
                         <div id={Style.amountcontainer}>
                             <div id={Style.analaysisimg22}>
-                                <h1>{monthClientPct}%</h1>
+                                {/* <h1>{monthClientPct}%</h1> */}
+                                <img src={customericon1} alt="" />
                             </div>
                             <div id={Style.analaysistext}>
                                 <p>{monthClients}</p>
@@ -347,32 +364,33 @@ export function UserPage({ searchTerm }) {
                         </div>
 
                         <div id={Style.amountcontainer}>
-                            <div id={Style.analaysisimg22}>
-                                <h1>{monthClientPct}%</h1>
+                            <div id={Style.analaysisimg25}>
+                                {/* <h1>{monthClientPct}%</h1> */}
+                                <img src={ordericon2} alt="" />
                             </div>
                             <div id={Style.analaysistext}>
-                                <p>{monthOrders}</p>
+                                <p>{monthOrders} <span id={Style.analaysisspan}>|</span> {monthOrdersOld}</p>
                                 <p>Total Orders</p>
                             </div>
                         </div>
 
                         <div id={Style.amountcontainer}>
                             <div id={Style.analaysisimg32}>
-                                <h1>{monthPendingPct}%</h1>
+                                <img src={pendingicon2} alt="" />
                             </div>
                             <div id={Style.analaysistext}>
                                 <p>{monthPending}</p>
-                                <p>Pending count</p>
+                                <p>Payment Pending count</p>
                             </div>
                         </div>
 
                         <div id={Style.amountcontainer}>
                             <div id={Style.analaysisimg42}>
-                                <h1>{monthRejPct}%</h1>
+                                <img src={rejecticon2} alt="" />
                             </div>
                             <div id={Style.analaysistext}>
                                 <p>{monthRej}</p>
-                                <p>Reject count</p>
+                                <p>Clients Rejected count</p>
                             </div>
                         </div>
 

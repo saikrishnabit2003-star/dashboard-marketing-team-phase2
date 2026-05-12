@@ -98,7 +98,7 @@ export function Tablepage({ searchTerm }) {
         e.preventDefault();
         if (!phaseModal) return;
         const { rowIndex, phase, data } = phaseModal;
-        
+
         const paymentField = `phase_${phase}_payment`;
         const dateField = `phase_${phase}_payment_date`;
         const detailsField = `phase_${phase}_payment_details`;
@@ -319,10 +319,11 @@ export function Tablepage({ searchTerm }) {
             rank: ['Q1', 'Q2', 'Q3', 'Q4', 'Anything', 'Q1 or Q2', 'Q2 or Q3', 'Q3 or Q4'],
             order_type: ['WO/PO', 'MO/PO', 'WO', 'PO', 'MO/RV', 'MO', 'Thesis writing', 'WO/Implementation/PO', 'Review paper writing', 'WO/Conference', 'Improvement'],
             currency: ['USD', 'INR'],
-            order_status: ['Active', 'Inactive']
+            order_status: ['Active', 'Inactive'],
+            is_new_order: ['YES', 'NO']
         };
 
-        const textareaFields = ['title', 'remarks', 'client_affiliations','journal_name'];
+        const textareaFields = ['title', 'remarks', 'client_affiliations', 'journal_name'];
         const linkFields = ['client_drive_link', 'clients_details'];
 
         // --- Status Badge renderer ---
@@ -341,9 +342,12 @@ export function Tablepage({ searchTerm }) {
                 ...(v === 'active'
                     ? { background: '#dcfce7', color: '#15803d', border: '1px solid #bbf7d0' }
                     : v === 'inactive'
-                    ? { background: '#fee2e2', color: '#b91c1c', border: '1px solid #fecaca' }
-                    : { background: '#f1f5f9', color: '#64748b', border: '1px solid #e2e8f0' })
+                        ? { background: '#fee2e2', color: '#b91c1c', border: '1px solid #fecaca' }
+                        : { background: '#f1f5f9', color: '#64748b', border: '1px solid #e2e8f0' })
             };
+            
+            
+
             const dot = {
                 width: '7px', height: '7px', borderRadius: '50%',
                 background: v === 'active' ? '#16a34a' : v === 'inactive' ? '#dc2626' : '#94a3b8'
@@ -351,6 +355,34 @@ export function Tablepage({ searchTerm }) {
             return <span style={style}><span style={dot}></span>{value || 'N/A'}</span>;
         };
 
+
+        const getNewOrderBadge = (value) => {
+            const v = (value || '').toLowerCase();
+            const style = {
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '5px',
+                padding: '3px 10px',
+                borderRadius: '999px',
+                fontSize: '0.75rem',
+                fontWeight: 600,
+                letterSpacing: '0.03em',
+                whiteSpace: 'nowrap',
+                ...(v === 'yes'
+                    ? { background: '#dcfce7', color: '#15803d', border: '1px solid #bbf7d0' }
+                    : v === 'no'
+                        ? { background: '#fee2e2', color: '#b91c1c', border: '1px solid #fecaca' }
+                        : { background: '#f1f5f9', color: '#64748b', border: '1px solid #e2e8f0' })
+            };
+            
+            
+
+            const dot = {
+                width: '7px', height: '7px', borderRadius: '50%',
+                background: v === 'yes' ? '#16a34a' : v === 'no' ? '#dc2626' : '#94a3b8'
+            };
+            return <span style={style}><span style={dot}></span>{value || 'N/A'}</span>;
+        }
         const getPaymentStatusBadge = (value) => {
             const v = (value || '').toLowerCase();
             const style = {
@@ -366,10 +398,10 @@ export function Tablepage({ searchTerm }) {
                 ...(v === 'paid'
                     ? { background: '#dcfce7', color: '#15803d', border: '1px solid #bbf7d0' }
                     : v === 'pending'
-                    ? { background: '#fee2e2', color: '#b91c1c', border: '1px solid #fecaca' }
-                    : v === 'partial'
-                    ? { background: '#fff7ed', color: '#c2410c', border: '1px solid #fed7aa' }
-                    : { background: '#f1f5f9', color: '#64748b', border: '1px solid #e2e8f0' })
+                        ? { background: '#fee2e2', color: '#b91c1c', border: '1px solid #fecaca' }
+                        : v === 'partial'
+                            ? { background: '#fff7ed', color: '#c2410c', border: '1px solid #fed7aa' }
+                            : { background: '#f1f5f9', color: '#64748b', border: '1px solid #e2e8f0' })
             };
             const dot = {
                 width: '7px', height: '7px', borderRadius: '50%',
@@ -438,6 +470,8 @@ export function Tablepage({ searchTerm }) {
                     )
                 ) : fieldName === 'order_status' ? (
                     getOrderStatusBadge(row[fieldName])
+                ) : fieldName === 'is_new_order' ? (
+                    getNewOrderBadge(row[fieldName])
                 ) : fieldName === 'payment_status' ? (
                     getPaymentStatusBadge(row[fieldName])
                 ) : textareaFields.includes(fieldName) ? (
@@ -583,6 +617,10 @@ export function Tablepage({ searchTerm }) {
                             <tr>
                                 <th>S.no</th>
                                 <th>client Id</th>
+                                <th>Reference Id</th>
+                                <th>Order Id</th>
+                                <th>New Order</th>
+                                <th>Client handler</th>
                                 <th>Country</th>
                                 <th>client Email</th>
                                 <th>whatsapp no</th>
@@ -614,7 +652,7 @@ export function Tablepage({ searchTerm }) {
                                 <th>phase 3 payment date</th>
                                 <th>phase 3 payment reason</th>
                                 <th>Total Paid Amount</th>
-                                 <th>currency</th>
+                                <th>currency</th>
                                 <th>payment status</th>
                                 <th>bank account</th>
                                 <th>client affiliations</th>
@@ -634,6 +672,10 @@ export function Tablepage({ searchTerm }) {
 
                                         <td>{startIndex + index + 1}</td>
                                         {renderCell(row, actualIndex, 'client_id')}
+                                        {renderCell(row, actualIndex, 'reference_id')}
+                                        {renderCell(row, actualIndex, 'order_id')}
+                                        {renderCell(row, actualIndex, 'is_new_order')}
+                                        {renderCell(row, actualIndex, 'client_handler_name')}
                                         {renderCell(row, actualIndex, 'client_country', row.client_country)}
                                         {renderCell(row, actualIndex, 'client_Email')}
                                         {renderCell(row, actualIndex, 'client_whatsapp_number')}
@@ -698,8 +740,8 @@ export function Tablepage({ searchTerm }) {
                         <form className={Style.modalForm} onSubmit={submitPhaseModal}>
                             <div className={Style.modalInputGroup}>
                                 <label>Payment Amount</label>
-                                <input 
-                                    type="number" 
+                                <input
+                                    type="number"
                                     step="any"
                                     min="0"
                                     value={phaseModal.data.payment}
@@ -720,7 +762,7 @@ export function Tablepage({ searchTerm }) {
                             </div>
                             <div className={Style.modalInputGroup}>
                                 <label>Payment Reason</label>
-                                <textarea 
+                                <textarea
                                     value={phaseModal.data.details}
                                     onChange={(e) => handlePhaseModalChange('details', e.target.value)}
                                     placeholder="Enter payment reason / details..."

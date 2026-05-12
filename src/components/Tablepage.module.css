@@ -245,43 +245,46 @@
 
 /* ─── Specific column color accents ─────────────────────────── */
 /* Column 5 — cadetblue (country / profile) */
-.tabledata td:nth-child(5) {
+.tabledata td:nth-child(9) {
   color: #4a90a4;
 }
 
 /* Column 8 — orange-red */
-.tabledata td:nth-child(8) {
+.tabledata td:nth-child(3),
+.tabledata td:nth-child(4),
+.tabledata td:nth-child(12),
+.tabledata td:nth-child(13){
   color: var(--orange);
   font-weight: 500;
 }
-.tabledata td:nth-child(11){
+.tabledata td:nth-child(16){
   width: 200px;
 }
 /* Columns 14–17, 24, 26, 28, 30 — blue (amounts) */
 
-.tabledata td:nth-child(14),
-.tabledata td:nth-child(15),
-.tabledata td:nth-child(16),
-.tabledata td:nth-child(17),
-.tabledata td:nth-child(24),
-.tabledata td:nth-child(27),
-.tabledata td:nth-child(30),
-.tabledata td:nth-child(33) {
+.tabledata td:nth-child(18),
+.tabledata td:nth-child(19),
+.tabledata td:nth-child(20),
+.tabledata td:nth-child(21),
+.tabledata td:nth-child(28),
+.tabledata td:nth-child(31),
+.tabledata td:nth-child(34),
+.tabledata td:nth-child(37) {
   color: var(--accent);
   font-weight: 600;
 }
 
 /* WhatsApp column — teal */
-.tabledata td:nth-child(6),
-.tabledata td:nth-child(18),
-.tabledata td:nth-child(19), 
-.tabledata td:nth-child(20), 
-.tabledata td:nth-child(21), 
-.tabledata td:nth-child(22), 
-.tabledata td:nth-child(23),
-.tabledata td:nth-child(25),
-.tabledata td:nth-child(28),
-.tabledata td:nth-child(31) {
+.tabledata td:nth-child(10),
+.tabledata td:nth-child(22),
+.tabledata td:nth-child(23), 
+.tabledata td:nth-child(24), 
+.tabledata td:nth-child(25), 
+.tabledata td:nth-child(26), 
+.tabledata td:nth-child(27),
+.tabledata td:nth-child(29),
+.tabledata td:nth-child(32),
+.tabledata td:nth-child(35){
   color: var(--teal);
 }
 
@@ -301,36 +304,11 @@
   overflow-wrap: anywhere;
 }
 
-.tabledata th:nth-child(3),
-.tabledata td:nth-child(3) {
+.tabledata th:nth-child(7),
+.tabledata td:nth-child(7) {
   width: 100px;
   text-align: center;
   overflow-wrap: anywhere;
-}
-
-.tabledata th:nth-child(4),
-.tabledata td:nth-child(4) {
-  width: 150px;
-  text-align: center;
-  overflow-wrap: anywhere;
-}
-
-.tabledata th:nth-child(5),
-.tabledata td:nth-child(5) {
-  width: 110px;
-  text-align: center;
-}
-
-.tabledata th:nth-child(6),
-.tabledata td:nth-child(6) {
-  width: 140px;
-  text-align: center;
-}
-
-.tabledata th:nth-child(7),
-.tabledata td:nth-child(7) {
-  width: 120px;
-  text-align: center;
 }
 
 .tabledata th:nth-child(8),
@@ -342,16 +320,41 @@
 
 .tabledata th:nth-child(9),
 .tabledata td:nth-child(9) {
+  width: 110px;
+  text-align: center;
+}
+
+.tabledata th:nth-child(10),
+.tabledata td:nth-child(10) {
+  width: 140px;
+  text-align: center;
+}
+
+.tabledata th:nth-child(11),
+.tabledata td:nth-child(11) {
+  width: 120px;
+  text-align: center;
+}
+
+.tabledata th:nth-child(12),
+.tabledata td:nth-child(12) {
   width: 150px;
   text-align: center;
   overflow-wrap: anywhere;
 }
 
-.tabledata td:nth-child(10),
-.tabledata td:nth-child(11),
-.tabledata td:nth-child(34),
-.tabledata td:nth-child(35),
-.tabledata td:nth-child(36) {
+.tabledata th:nth-child(13),
+.tabledata td:nth-child(13) {
+  width: 150px;
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+
+.tabledata td:nth-child(14),
+.tabledata td:nth-child(13),
+.tabledata td:nth-child(15),
+.tabledata td:nth-child(16),
+.tabledata td:nth-child(17) {
   white-space: pre-wrap;
   width: 280px;
   overflow-wrap: break-word;
@@ -380,12 +383,12 @@
   border-radius: 4px;
 }
 
-.tabledata th:nth-child(12),
-.tabledata td:nth-child(12),
-.tabledata th:nth-child(13),
-.tabledata td:nth-child(13),
-.tabledata th:nth-child(14),
-.tabledata td:nth-child(14) {
+.tabledata th:nth-child(17),
+.tabledata td:nth-child(17),
+.tabledata th:nth-child(18),
+.tabledata td:nth-child(18),
+.tabledata th:nth-child(19),
+.tabledata td:nth-child(19) {
   width: 150px;
   text-align: center;
 }

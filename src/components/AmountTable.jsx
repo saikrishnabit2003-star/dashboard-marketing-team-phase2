@@ -19,14 +19,16 @@ const formatDate = (dateString) => {
 
 export function AmountTable({ searchTerm }) {
     const [tableData, setTableData] = useState([]);
-
+    const [amountData, setAmountData] = useState(0);
+    const [orderData, setOrderData] = useState(0);
+    const [clientData, setClientData] = useState(0);
     useEffect(() => {
         const fetchTableData = async () => {
             try {
                 const token = localStorage.getItem('token');
                 if (!token) return;
 
-                const response = await axios.get(`${BASE_URL}/payments/history`, {
+                const response = await axios.get(`${BASE_URL}/payments/pending-summary`, {
                     headers: {
                         "Authorization": `Bearer ${token}`
                     }
@@ -38,11 +40,18 @@ export function AmountTable({ searchTerm }) {
                     window.location.reload();
                     return;
                 }
+                console.log(response.data.data);
 
-                if (response.data?.data) {
-                    setTableData(response.data.data);
-                } else if (Array.isArray(response.data)) {
-                    setTableData(response.data);
+                if (response.data.data.top_pending_clients) {
+                    setTableData(response.data.data.top_pending_clients);
+                    setAmountData(response.data.data.total_pending_amount);
+                    setOrderData(response.data.data.pending_orders_count);
+                    setClientData(response.data.data.pending_clients_count);
+                } else if (Array.isArray(response.data.data.top_pending_clients)) {
+                    setTableData(response.data.data.top_pending_clients);
+                    setAmountData(response.data.data.total_pending_amount);
+                    setOrderData(response.data.data.pending_orders_count);
+                    setClientData(response.data.data.pending_clients_count);
                 }
             } catch (error) {
                 console.error("Error fetching amount table data:", error);
@@ -63,23 +72,19 @@ export function AmountTable({ searchTerm }) {
         <div className={Style.page}>
             <div className={Style.tablecontainer}>
                 <div className={Style.tableheader}>
-                    <h2>Amount table</h2>
+                    <p>Pending Amount: $ <span>{amountData}</span></p>
+                    <p>Pending Orders: <span>{orderData}</span></p>
+                    <p>Pending Clients: <span>{clientData}</span></p>
                 </div>
                 <div className={Style.tablecontainerdata}>
                     <table className={Style.tabledata}>
                         <thead>
                             <tr>
                                 <th>Client ID</th>
-                                <th>Payment 1</th>
-                                <th>Date 1</th>
-                                {/* <th>Phase 1 Payment Reason</th> */}
-                                <th>Payment 2</th>
-                                <th>Date 2</th>
-                                {/* <th>Phase 2 Payment Reason</th> */}
-                                <th>Payment 3</th>
-                                <th>Date 3</th>
-                                {/* <th>Phase 3 Payment Reason</th> */}
-                                {/* <th>Total Paid Amount</th> */}
+                                <th>Client Name</th>
+                                <th>Total Orders</th>
+                                <th>Pending Orders</th>
+                                <th>Total Pending Amount</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -87,16 +92,10 @@ export function AmountTable({ searchTerm }) {
                                 filteredData.map((row, index) => (
                                     <tr key={index}>
                                         <td>{row.client_id || 'N/A'}</td>
-                                        <td>{row.phase_1_payment || 0}</td>
-                                        <td>{formatDate(row.phase_1_payment_date)}</td>
-                                        {/* <td>{row.phase_1_payment_details || '-'}</td> */}
-                                        <td>{row.phase_2_payment || 0}</td>
-                                        <td>{formatDate(row.phase_2_payment_date)}</td>
-                                        {/* <td>{row.phase_2_payment_details || '-'}</td> */}
-                                        <td>{row.phase_3_payment || 0}</td>
-                                        <td>{formatDate(row.phase_3_payment_date)}</td>
-                                        {/* <td>{row.phase_3_payment_details || '-'}</td> */}
-                                        {/* <td>{row.paid_amount || 0}</td> */}
+                                        <td>{row.client_name || 'N/A'}</td>
+                                        <td>{row.total_orders || 'N/A'}</td>
+                                        <td>{row.pending_orders || 'N/A'}</td>
+                                        <td>{Math.round(row.total_pending_amount * 100) / 100 || 'N/A'}</td>
                                     </tr>
                                 ))
                             ) : (
