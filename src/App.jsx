@@ -19,6 +19,20 @@ import DownArrowIcon from './assets/downarrow.png';
 import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 // Dashboard layout: sidebar + header + the routed page content
 function DashboardLayout() {
+  const FONT_OPTIONS = [
+    { label: '— Default (System) —', value: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif" },
+    { label: 'Inter',                value: "'Inter', sans-serif" },
+    { label: 'Roboto',               value: "'Roboto', sans-serif" },
+    { label: 'Poppins',              value: "'Poppins', sans-serif" },
+    { label: 'Outfit',               value: "'Outfit', sans-serif" },
+    { label: 'Montserrat',           value: "'Montserrat', sans-serif" },
+    { label: 'Nunito',               value: "'Nunito', sans-serif" },
+    { label: 'Lato',                 value: "'Lato', sans-serif" },
+    { label: 'Playwrite GB S',       value: "'Playwrite GB S', cursive" },
+    { label: 'Merriweather',         value: "'Merriweather', serif" },
+    { label: 'Fira Code',            value: "'Fira Code', monospace" },
+  ];
+
   const [showDropdown, setShowDropdown] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
@@ -28,6 +42,9 @@ function DashboardLayout() {
   const navigate = useNavigate();
   const [username, setusername] = useState("User name")
   const [themeColor, setThemeColor] = useState(localStorage.getItem('themeColor') || '#0d1b3e');
+  const [selectedFont, setSelectedFont] = useState(
+    localStorage.getItem('globalFont') || "'Playwrite GB S', cursive"
+  );
 
   useEffect(() => {
     document.documentElement.style.setProperty('--theme-color', themeColor);
@@ -37,6 +54,11 @@ function DashboardLayout() {
   }, [themeColor]);
 
   useEffect(() => {
+    document.documentElement.style.setProperty('--global-font', selectedFont);
+    localStorage.setItem('globalFont', selectedFont);
+  }, [selectedFont]);
+
+  useEffect(() => {
 
     const token = localStorage.getItem('token');
     console.log(token)
@@ -44,7 +66,7 @@ function DashboardLayout() {
       fetch(`${BASE_URL}/users/me/details`, {
         method: "GET",
         headers: {
-          "Authorization": `Bearer ${token}`  
+          "Authorization": `Bearer ${token}`
         }
       })
         .then(response => response.json())
@@ -125,6 +147,7 @@ function DashboardLayout() {
             {
               showDropdown && (
                 <div className='dropdown'>
+                  {/* ── Theme colour ── */}
                   <div style={{ padding: '10px', display: 'flex', alignItems: 'center', gap: '10px' }}>
                     <label htmlFor="themePicker" style={{ fontSize: '14px', color: '#666', fontWeight: 'bold' }}>Theme:</label>
                     <input
@@ -137,6 +160,34 @@ function DashboardLayout() {
                     />
                   </div>
                   <hr style={{ border: 'none', borderBottom: '1px solid #eee', margin: '5px 0' }} />
+                  {/* ── Font picker ── */}
+                  <div style={{ padding: '10px 10px 4px' }}>
+                    <label htmlFor="fontPicker" style={{ fontSize: '13px', color: '#666', fontWeight: 'bold', display: 'block', marginBottom: '6px' }}>Font:</label>
+                    <select
+                      id="fontPicker"
+                      value={selectedFont}
+                      onChange={(e) => setSelectedFont(e.target.value)}
+                      style={{
+                        width: '100%',
+                        padding: '6px 8px',
+                        borderRadius: '6px',
+                        border: '1px solid #ddd',
+                        fontSize: '13px',
+                        cursor: 'pointer',
+                        background: '#fafafa',
+                        color: '#333',
+                        outline: 'none',
+                        fontFamily: selectedFont,
+                      }}
+                    >
+                      {FONT_OPTIONS.map((f) => (
+                        <option key={f.value} value={f.value} style={{ fontFamily: f.value }}>
+                          {f.label}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <hr style={{ border: 'none', borderBottom: '1px solid #eee', margin: '5px 0' }} />
                   <button onClick={() => navigate('/profile')}>My Profile</button>
 
                   <button id='logout-btn' onClick={() => {
@@ -144,6 +195,7 @@ function DashboardLayout() {
                     localStorage.removeItem('user_role');
                     navigate('/');
                   }}>Logout</button>
+                  
                 </div>
               )
             }

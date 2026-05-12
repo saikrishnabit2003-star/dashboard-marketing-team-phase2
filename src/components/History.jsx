@@ -20,7 +20,10 @@ const formatDate = (dateString) => {
 export function History({ searchTerm = '' }) {
     const [historyData, setHistoryData] = useState([]);
     const [loading, setLoading] = useState(true);
-
+    const [clientFilter, setClientFilter] = useState('');
+    const [appliedFilter, setAppliedFilter] = useState('');
+    const [recordsInput, setRecordsInput] = useState('');
+    const [numberOfRecords, setNumberOfRecords] = useState(20); 
     useEffect(() => {
         const fetchHistoryData = async () => {
             try {
@@ -58,19 +61,74 @@ export function History({ searchTerm = '' }) {
         fetchHistoryData();
     }, []);
 
-    const filteredData = historyData.filter(row => {
+
+    // Stage 1: apply global search term
+    const searchFiltered = historyData.filter(row => {
         if (!searchTerm) return true;
         return Object.values(row).some(value =>
             String(value).toLowerCase().includes(searchTerm.toLowerCase())
         );
     });
 
+    // Stage 2: apply client ID filter OR limit to first 50
+    const displayData = appliedFilter
+        ? searchFiltered.filter(row =>
+            String(row.client_id || '').toLowerCase().includes(appliedFilter.toLowerCase())
+          )
+        : searchFiltered.slice(0, numberOfRecords);
+
+    const handleApplyFilter = () => {
+        setAppliedFilter(clientFilter.trim());
+    };
+
+    const handleClearFilter = () => {
+        setClientFilter('');
+        setAppliedFilter('');
+    };
+
+    const handleLoadRecords = () => {
+        const num = parseInt(recordsInput);
+        if (!num || num <= 0) {
+            setNumberOfRecords(20);
+        } else {
+            setNumberOfRecords(num);
+        }
+        setAppliedFilter('');
+    };
+
     return (
         <div className={Style.page}>
             <div className={Style.header}>
                 <div>
                     <h2>Payment History</h2>
-                    <p>Displaying {filteredData.length} Records</p>
+                    <p>
+                        {appliedFilter
+                            ? `Showing all ${displayData.length} records for client "${appliedFilter}"`
+                            : `Showing first ${displayData.length} of ${searchFiltered.length} records`
+                        }
+                    </p>
+                </div>
+                <div style={{display:"flex",gap:"10px",alignItems:"center"}}>
+                    <input type="number" style={{width:"150px",height:"40px"}} className={Style.filterInput} placeholder="No. of records" value={recordsInput} onChange={(e) => setRecordsInput(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && handleLoadRecords()} />
+                    <button className={Style.filterBtn} onClick={handleLoadRecords} >Load</button>
+                </div>
+                <div className={Style.filterBar}>
+                    <input
+                        type="text"
+                        className={Style.filterInput}
+                        placeholder="Filter by Client ID..."
+                        value={clientFilter}
+                        onChange={(e) => setClientFilter(e.target.value)}
+                        onKeyDown={(e) => e.key === 'Enter' && handleApplyFilter()}
+                    />
+                    <button className={Style.filterBtn} onClick={handleApplyFilter}>
+                        Search
+                    </button>
+                    {appliedFilter && (
+                        <button className={Style.clearBtn} onClick={handleClearFilter}>
+                            Clear
+                        </button>
+                    )}
                 </div>
             </div>
 
@@ -78,8 +136,8 @@ export function History({ searchTerm = '' }) {
                 <div style={{ textAlign: 'center', padding: '40px', color: '#6b7280' }}>Loading history...</div>
             ) : (
                 <div className={Style.cardGrid}>
-                    {filteredData.length > 0 ? (
-                        filteredData.map((record, index) => (
+                    {displayData.length > 0 ? (
+                        displayData.map((record, index) => (
                             <div key={index} className={Style.historyCard}>
                                 <div className={Style.cardHeader}>
                                     <span className={Style.clientBadge}>
@@ -141,7 +199,12 @@ export function History({ searchTerm = '' }) {
                             </div>
                         ))
                     ) : (
-                        <div className={Style.noData}>No history records found</div>
+                        <div className={Style.noData}>
+                                {appliedFilter
+                                    ? `No records found for client "${appliedFilter}"`
+                                    : 'No history records found'
+                                }
+                            </div>
                     )}
                 </div>
             )}

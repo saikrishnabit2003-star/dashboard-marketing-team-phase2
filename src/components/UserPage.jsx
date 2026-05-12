@@ -3,11 +3,13 @@ import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from 'recha
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import amounticon from "../assets/amounticon.png";
 import amounticon2 from "../assets/amount2.png";
 import { BASE_URL } from '../config';
 
 export function UserPage({ searchTerm }) {
+    const navigate = useNavigate();
 
     const [totalamount, settotalamount] = useState(0)
     const [totalUsdAmount, setTotalUsdAmount] = useState(0)
@@ -266,7 +268,7 @@ export function UserPage({ searchTerm }) {
                         <p className={Style.overalldetailstitle}>overall analysis</p>
                         <div className={Style.container2}>
 
-                            <div id={Style.amountcontainer}>
+                            <div id={Style.amountcontainer} onDoubleClick={() => navigate('/history')} style={{ cursor: 'pointer' }}>
                                 <div id={Style.analaysisimg1}>
                                     <img src={amounticon} alt="" />
                                 </div>
@@ -329,7 +331,7 @@ export function UserPage({ searchTerm }) {
                                 <img src={amounticon2} alt="" />
                             </div>
                             <div id={Style.analaysistext}>
-                                <p>{Math.round(monthAmount * 100) / 100}</p>
+                                <p>$ {Math.round(monthAmount * 100) / 100}</p>
                                 <p>Total amount</p>
                             </div>
                         </div>
