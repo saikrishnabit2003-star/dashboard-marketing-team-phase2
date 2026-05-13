@@ -132,3 +132,17 @@
 .tabledata tbody tr td:nth-child(2){
   width: 300px;
 }
+
+@media screen and (max-width: 480px) {
+  .tableheader{
+    flex-direction: column;
+    justify-content: start;
+    height: 100%;
+    align-items: start;
+    row-gap: 5px;
+  }
+  .tablecontainerdata{
+    overflow-y: auto;
+    height: 100%;
+  }
+}

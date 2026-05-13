@@ -15,7 +15,7 @@
   --teal:           #00bcd4;
   --teal-soft:      rgba(0, 188, 212, 0.08);
   --red:            #e5484d;
-  --orange:         #c93e0b;
+  --orange:         #3e2483;
   --green:          #16a34a;
 
   --bg:             #f3f4f8;
@@ -683,4 +683,103 @@ select.editInput {
 
 .submitBtn:hover {
   background: #0056cc;
+}
+
+/* ─── Filter Header Styles ───────────────────────────────────── */
+.filterTh {
+  position: relative;
+  cursor: pointer;
+}
+
+.filterHeaderContent {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.filterIcon {
+  background: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px;
+  border-radius: 4px;
+  transition: all var(--transition);
+}
+
+.filterIcon:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
+.activeFilter {
+  color: var(--teal);
+  background: rgba(0, 188, 212, 0.15);
+}
+
+.filterDropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  min-width: 160px;
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+  z-index: 100;
+  margin-top: 5px;
+  max-height: 250px;
+  overflow-y: auto;
+  text-align: left;
+}
+
+.filterOption {
+  padding: 10px 16px;
+  font-size: 0.8rem;
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: background var(--transition);
+  border-bottom: 1px solid var(--border-light);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.filterOption:last-child {
+  border-bottom: none;
+}
+
+.filterOption:hover {
+  background: var(--bg);
+}
+
+.selectedOption {
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.clearFilterBtn {
+  padding: 8px 16px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+  background: white;
+  color: var(--red);
+  font-family: var(--font);
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  transition: all var(--transition);
+}
+
+.clearFilterBtn:hover {
+  background: #fff5f5;
+  border-color: var(--red);
+  transform: translateY(-1px);
 }

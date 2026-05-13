@@ -25,6 +25,16 @@ export function Tablepage({ searchTerm }) {
     const [editValue, setEditValue] = useState('');
     const [phaseModal, setPhaseModal] = useState(null); // { phase, rowIndex, data: { payment, date, details } }
     const [notification, setNotification] = useState({ message: '', type: '', visible: false });
+    const [filters, setFilters] = useState({
+        payment_status: '',
+        order_status: '',
+        rank: '',
+        index: '',
+        client_country: '',
+        is_new_order: '',
+        order_type: ''
+    });
+    const [activeFilterField, setActiveFilterField] = useState(null); // Which filter dropdown is open
     const itemsPerPage = 15;
 
     const showNotification = (message, type) => {
@@ -63,6 +73,17 @@ export function Tablepage({ searchTerm }) {
     useEffect(() => {
         fetchTableData();
     }, []);
+
+    // Handle clicking outside of filter dropdowns to close them
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (activeFilterField && !event.target.closest(`.${Style.filterTh}`)) {
+                setActiveFilterField(null);
+            }
+        };
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, [activeFilterField]);
 
     const handleDoubleClick = (rowIndex, fieldName, currentValue) => {
         const phaseMatch = fieldName.match(/^phase_(\d)_payment(?:_date|_details)?$/);
@@ -270,12 +291,20 @@ export function Tablepage({ searchTerm }) {
         }
     };
 
-    // Filter data based on search term
+    // Filter data based on search term and individual column filters
     const filteredData = tableData.filter(row => {
-        if (!searchTerm) return true;
-        return Object.values(row).some(value =>
+        // Global search term
+        const matchesSearch = !searchTerm || Object.values(row).some(value =>
             String(value).toLowerCase().includes(searchTerm.toLowerCase())
         );
+
+        // Individual column filters
+        const matchesFilters = Object.entries(filters).every(([key, value]) => {
+            if (!value) return true;
+            return String(row[key] || '').trim().toLowerCase() === value.toLowerCase();
+        });
+
+        return matchesSearch && matchesFilters;
     });
 
     const totalPages = Math.ceil(filteredData.length / itemsPerPage);
@@ -288,13 +317,65 @@ export function Tablepage({ searchTerm }) {
         }
     };
 
-    // Reset pagination when search term changes
+    // Reset pagination when search term or filters change
     useEffect(() => {
         setCurrentPage(1);
-    }, [searchTerm]);
+    }, [searchTerm, filters]);
 
     // Fields that should never be editable inline
     const READ_ONLY_FIELDS = new Set(['total_amount', 'paid_amount']);
+
+    const FilterHeader = ({ label, field }) => {
+        const uniqueValues = [...new Set(tableData.map(item => String(item[field] || '').trim().toUpperCase()))]
+            .filter(val => val !== '')
+            .sort();
+
+        const isOpen = activeFilterField === field;
+
+        return (
+            <th className={Style.filterTh}>
+                <div className={Style.filterHeaderContent}>
+                    <span>{label}</span>
+                    <button
+                        className={`${Style.filterIcon} ${filters[field] ? Style.activeFilter : ''}`}
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            setActiveFilterField(isOpen ? null : field);
+                        }}
+                    >
+                        <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor">
+                            <path d="M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z" />
+                        </svg>
+                    </button>
+                </div>
+                {isOpen && (
+                    <div className={Style.filterDropdown}>
+                        <div
+                            className={`${Style.filterOption} ${filters[field] === '' ? Style.selectedOption : ''}`}
+                            onClick={() => {
+                                setFilters(prev => ({ ...prev, [field]: '' }));
+                                setActiveFilterField(null);
+                            }}
+                        >
+                            All
+                        </div>
+                        {uniqueValues.map(val => (
+                            <div
+                                key={val}
+                                className={`${Style.filterOption} ${filters[field] === val ? Style.selectedOption : ''}`}
+                                onClick={() => {
+                                    setFilters(prev => ({ ...prev, [field]: val }));
+                                    setActiveFilterField(null);
+                                }}
+                            >
+                                {val}
+                            </div>
+                        ))}
+                    </div>
+                )}
+            </th>
+        );
+    };
 
     const renderCell = (row, rowIndex, fieldName, displayValue) => {
         // Read-only: just show the value, no double-click editing
@@ -607,7 +688,20 @@ export function Tablepage({ searchTerm }) {
                 <div className={Style.tableheader}>
                     <h2>Overall Table</h2>
                     <p>displaying <span>{currentData.length}</span> of {filteredData.length} records</p>
-                    <button className={Style.exportBtn} onClick={handleExport}>Export</button>
+                    <div style={{ display: 'flex', gap: '10px' }}>
+                        {Object.values(filters).some(f => f !== '') && (
+                            <button className={Style.clearFilterBtn} onClick={() => setFilters({
+                                payment_status: '',
+                                order_status: '',
+                                rank: '',
+                                index: '',
+                                client_country: '',
+                                is_new_order: '',
+                                order_type: ''
+                            })}>Clear Filters</button>
+                        )}
+                        <button className={Style.exportBtn} onClick={handleExport}>Export</button>
+                    </div>
                 </div>
                 {/* table data */}
                 <div className={Style.tablecontainerdata}>
@@ -619,19 +713,19 @@ export function Tablepage({ searchTerm }) {
                                 <th>client Id</th>
                                 <th>Reference Id</th>
                                 <th>Order Id</th>
-                                <th>New Order</th>
+                                <FilterHeader label="New Order" field="is_new_order" />
                                 <th>Client handler</th>
-                                <th>Country</th>
+                                <FilterHeader label="Country" field="client_country" />
                                 <th>client Email</th>
                                 <th>whatsapp no</th>
                                 <th>order date</th>
-                                <th>order type</th>
+                                <FilterHeader label="order type" field="order_type" />
                                 <th>client ref id</th>
                                 <th>manuscript id</th>
                                 <th>Title</th>
                                 <th>Journal name</th>
-                                <th>index</th>
-                                <th>rank</th>
+                                <FilterHeader label="index" field="index" />
+                                <FilterHeader label="rank" field="rank" />
                                 <th>total amount</th>
                                 <th>writing amount</th>
                                 <th>modification amount</th>
@@ -653,13 +747,13 @@ export function Tablepage({ searchTerm }) {
                                 <th>phase 3 payment reason</th>
                                 <th>Total Paid Amount</th>
                                 <th>currency</th>
-                                <th>payment status</th>
+                                <FilterHeader label="payment status" field="payment_status" />
                                 <th>bank account</th>
                                 <th>client affiliations</th>
                                 <th>remarks</th>
                                 <th>Client Drive</th>
                                 <th>Client Details</th>
-                                <th>Record Status</th>
+                                <FilterHeader label="Record Status" field="order_status" />
                             </tr>
                         </thead>
 

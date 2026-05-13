@@ -158,7 +158,7 @@ export function UserPage({ searchTerm }) {
                     // clients table (Source of truth for reactive stats)
                     const clients = d.country_based_details || [];
                     settable(clients);
-
+                    console.log("clients", clients)
                     const clientdetail = d.order_status_details || [];
                     setOrdersData(clientdetail);
                     // Overall analysis can be calculated here or reactively. 
@@ -430,30 +430,46 @@ export function UserPage({ searchTerm }) {
                                     data={pieData}
                                     cx="50%"
                                     cy="50%"
-                                    innerRadius={90}
-                                    outerRadius={172}
-                                    paddingAngle={3}
+                                    innerRadius={110}
+                                    outerRadius={160}
+                                    paddingAngle={5}
                                     dataKey="value"
-                                    stroke="#ffffff"
-                                    strokeWidth={2}
-                                    label={({ name, value, percent }) => percent > 0 ? `${name} \u2014 ${(percent * 100).toFixed(2)}%` : ''}
-                                    labelPosition="outside"
-                                    style={{ outline: 'none' }}
+                                    stroke="none"
+                                    animationBegin={0}
+                                    animationDuration={1500}
+                                    label={({ name, percent }) => percent > 0 ? `${name} (${(percent * 100).toFixed(1)}%)` : ''}
                                 >
-                                    {pieData.map((entry, index) => {
-                                        const color = COLORS[index % COLORS.length];
-                                        return (
-                                            <Cell
-                                                key={`cell-${index}`}
-                                                fill={color}
-                                                stroke={color}
-                                                strokeWidth={2}
-                                                style={{ outline: 'none' }}
-                                            />
-                                        );
-                                    })}
+                                    {pieData.map((entry, index) => (
+                                        <Cell 
+                                            key={`cell-${index}`} 
+                                            fill={COLORS[index % COLORS.length]} 
+                                            style={{ filter: 'drop-shadow(0px 4px 6px rgba(0,0,0,0.1))', outline: 'none' }}
+                                        />
+                                    ))}
                                 </Pie>
-                                <Tooltip formatter={(value) => `${value}`} />
+                                <Tooltip 
+                                    contentStyle={{ 
+                                        borderRadius: '12px', 
+                                        border: 'none', 
+                                        boxShadow: '0 8px 24px rgba(0,0,0,0.15)',
+                                        padding: '12px 16px',
+                                        fontSize: '14px',
+                                        fontWeight: '600'
+                                    }} 
+                                />
+                                <Legend 
+                                    verticalAlign="bottom" 
+                                    height={36} 
+                                    iconType="circle"
+                                    wrapperStyle={{ paddingTop: '20px', fontSize: '13px', fontWeight: '500' }}
+                                />
+                                {/* Center Label */}
+                                <text x="50%" y="50%" textAnchor="middle" dominantBaseline="middle" style={{ fontSize: '24px', fontWeight: '700', fill: 'var(--navy)' }}>
+                                    {totalclient}
+                                </text>
+                                <text x="50%" y="58%" textAnchor="middle" dominantBaseline="middle" style={{ fontSize: '12px', fontWeight: '500', fill: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '1px' }}>
+                                    Total Clients
+                                </text>
                             </PieChart>
                         </ResponsiveContainer>
                     </div>
