@@ -263,3 +263,24 @@
     font-weight: bold;
     font-size: 0.9rem;
 }
+@media screen and (max-width: 768px) {
+    #logincontainer {
+        flex-direction: column;
+        width: 90%;
+        height: auto;
+        padding: 40px 20px;
+    }
+
+    .gifcontainer {
+        display: none;
+    }
+
+    .loginCard {
+        width: 100%;
+        padding-right: 0;
+    }
+
+    .loginBtn {
+        width: 100%;
+    }
+}
